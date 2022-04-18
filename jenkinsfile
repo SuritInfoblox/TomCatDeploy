@@ -1,0 +1,39 @@
+pipeline{
+    agent any
+    environment {
+        PATH = "$PATH:C:/Program Files/apache-maven-3.8.5/bin"
+    }
+    stages{
+       stage('GetCode'){
+            steps{
+                git 'https://github.com/SuritInfoblox/TomCatDeploy.git';
+            }
+         }        
+       stage('Build'){
+            steps{
+                sh 'cd webapptom; mvn clean package'
+            }
+         }
+        stage('SonarQube analysis') {
+//    def scannerHome = tool 'SonarScanner 4.0';
+        steps{
+        withSonarQubeEnv('sonartest') { 
+        // If you have configured more than one global server connection, you can specify its name
+//      sh "${scannerHome}/bin/sonar-scanner"
+        sh 'cd webapptom; mvn sonar:sonar -D"sonar.login=d7f8ccd50f6d5b67ee41ad7b606d49e39d28d53a"'
+    }
+        }
+        }
+        stage('Deploy to TomCat'){
+            steps{
+            bat "copy webapptom\\target\\webapptom.war C:\\Users\\smusuvathi\\TomCat\\webapps"
+            }
+        }
+       
+       stage('Start tomcat Server'){
+           steps{
+           bat "C:\\Users\\smusuvathi\\TomCat\\bin\\startup.bat"
+           }
+       }
+    }
+}
