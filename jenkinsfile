@@ -30,6 +30,8 @@ pipeline{
        stage('Start tomcat Server'){
            steps{
            bat "C:\\Users\\smusuvathi\\TomCat\\bin\\startup.bat"
+           SLEEP 10
+           echo "Server Started"
            }
        }
     }
