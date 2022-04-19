@@ -29,6 +29,10 @@ pipeline{
        
        stage('Start tomcat Server'){
            steps{
+            bat "C:\\Users\\smusuvathi\\TomCat\\bin\\shutdown.bat";
+            sleep(5) {
+                // on interrupt do
+            }
            bat "C:\\Users\\smusuvathi\\TomCat\\bin\\startup.bat"
            }
        }
