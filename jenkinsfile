@@ -21,6 +21,16 @@ pipeline{
     }
         }
         }
+        stage('Quality Gate Check'){
+            steps{
+                timeout(time:1,unit:'HOURS'){
+                    def qg = waitForQualityGate()
+                    if(qg.status != 'OK'){
+                        error "Pipeline failed due to quality gate failure : $(qg.status)"
+                    }
+                }
+            }
+        }
         stage('Deploy to TomCat'){
             steps{
             bat "copy webapptom\\target\\webapptom.war C:\\Users\\smusuvathi\\TomCat\\webapps"
